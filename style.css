@@ -26,6 +26,11 @@ body{
         background-position: top left;
     }
 }
+h1{
+    font-size: calc(22px + (32 - 22) * ((100vw - 390px) / (1280 - 390)));
+    margin-right: 5px;
+}
+
 .rounded{
     border-radius: 10px;
     margin-bottom: 10px;
@@ -43,20 +48,25 @@ header{
     align-items: center;
 }
 #themeChange{
-    width: 50px;
-    height: 50px;
+    width: calc(30px + (50 - 30) * ((100vw - 390px) / (1280 - 390)));
+    height: calc(30px + (50 - 30) * ((100vw - 390px) / (1280 - 390)));
 }
 nav{
     display: flex;
-    padding: 10px 10px !important;
+    padding: calc(4px + (10 - 4) * ((100vw - 390px) / (1280 - 390))) calc(4px + (10 - 4) * ((100vw - 390px) / (1280 - 390))) !important;
     gap: 5px;
 }
 nav a{
     color: black;
-    font-size: 18px;
+    font-size: calc(12px + (18 - 12) * ((100vw - 390px) / (1280 - 390)));
     text-decoration: none;
     border-radius: 20px;
-    padding: 6px 20px;
+    padding: calc(4px + (6 - 4) * ((100vw - 390px) / (1280 - 390))) calc(10px + (20 - 10) * ((100vw - 390px) / (1280 - 390)));
+}
+
+.main{
+    display: block;
+
 }
 .active{
     background-color: orange;
@@ -74,37 +84,43 @@ nav a{
     outline: none;
 }
 #searchBtn{
-    font-size: 18px;
+    font-size: calc(12px + (18 - 12) * ((100vw - 390px) / (1280 - 390)));
     cursor: pointer;
 }
 .movieTitle{
+    display: block;
     text-align: center;
     padding: 10px;
-    font-size: 25px;
+    font-size: calc(18px + (25 - 18) * ((100vw - 390px) / (1280 - 390)));
     font-weight: 700;
     margin-bottom: 10px;
 }
 .movie{
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 0 10px;
     margin-bottom: 10px;
 }
 #movieImg{
-    width: 400px;
-    height: 600px;
+    flex-basis: 360px;
+    flex-grow: 1;
+    max-width: 400px;
+    height: calc(500px + (600 - 500) * ((100vw - 390px) / (1280 - 390)));
     background-image: url(./img/img/film2.jpg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     border-radius: 10px;
     position: relative;
+    margin-bottom: 10px;
 }
 .movieDescription{
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    min-width: 240px;
 }
 .desc{
     border-radius: 10px;
@@ -116,7 +132,7 @@ nav a{
     width: 50%;
 }
 .simularMovie{
-    display: grid;
+    display: none;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 20px;
     position: relative;
@@ -144,8 +160,8 @@ nav a{
 }
 
 .saved{
-    width: 50px;
-    height: 50px;
+    width: calc(30px + (50 - 30) * ((100vw - 390px) / (1280 - 390)));
+    height: calc(30px + (50 - 30) * ((100vw - 390px) / (1280 - 390)));
     background-color: rgba(210, 210, 210, 0.8);
     border-radius: 6px;
     background-image: url(./img/img/favBtn.svg);
@@ -174,4 +190,49 @@ nav a{
 .dark .saved{
     background-color: rgba(110, 110, 110, 0.8);
     filter: invert(100%);
+}
+
+.loader {
+    display: none;
+    height: 14px;
+    --c: no-repeat linear-gradient(#000 0 0);
+    background: var(--c),var(--c),#fff;
+    background-size: 60% 100%;
+    animation: l16 3s infinite;
+}
+@keyframes l16 {
+    0%   {background-position:-150% 0,-150% 0}
+    66%  {background-position: 250% 0,-150% 0}
+    100% {background-position: 250% 0, 250% 0}
+}
+
+/* Адаптация */
+
+@media(max-width: 390px){
+    h1{
+        font-size: calc(16px + (22 - 16) * ((100vw - 320px) / (390 - 320)))
+    }
+    #themeChange{
+        width: calc(25px + (30 - 25) * ((100vw - 320px) / (390 - 320)));
+        height: calc(25px + (30 - 25) * ((100vw - 320px) / (390 - 320)));
+    }
+    nav a{
+        padding: 4px calc(4px + (10 - 4) * ((100vw - 320px) / (390 - 320)));
+    }
+    #searchBtn{
+        font-size: 12px;
+    }
+    .movieTitle{
+        font-size: 18px;
+    }
+    #movieImg{
+        height: calc(400px + (500 - 400) * ((100vw - 320px) / (390 - 320)));
+    }
+    .saved{
+        width: 30px;
+        height: 30px;
+    }
+    .desc span{
+        font-size: calc(12px + (16 - 12) * ((100vw - 320px) / (390 - 320)));
+    }
 }
