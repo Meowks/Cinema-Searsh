@@ -66,13 +66,14 @@ nav a{
 
 .main{
     display: none;
-
+  
 }
 .active{
     background-color: orange;
     color: white;
     font-size: 700;
 }
+
 .search{
     display: flex;
     gap: 10px;
