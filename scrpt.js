@@ -38,6 +38,7 @@ async function findMovie() {
     movieTitle.innerHTML = `${result.Error}`;
   } else {
     showMovie(result);
+    findSimularMovies();
     console.log(result);
   }
 }
@@ -74,6 +75,53 @@ function showMovie(movie) {
         `;
   });
 }
+
+
+
+async function findSimularMovies() {
+  let search = document.getElementsByName("search")[0].value;
+  let simularMovieTitle = document.getElementsByClassName("movieTitle")[1];
+  let data = { apikey: "20fe8931", s: search };
+  let result = await sendRequest("http://www.omdbapi.com/", "GET", data);
+
+  if (result.Response == "false") {
+    // Вы можете скрыть или оставить пустой блок, если ничего не найдено
+  } else {
+    simularMovieTitle.style.display = "block";
+    simularMovieTitle.innerHTML = `Найдено похожих фильмов: ${result.totalResults}`;
+    showSimularMovie(result.Search);
+  }
+}
+
+function showSimularMovie(movies) {
+  const simularMovie = document.getElementsByClassName("simularMovie")[0];
+  simularMovie.innerHTML = ""; // Очищаем контейнер перед добавлением новых элементов
+  simularMovie.style.display = "grid";
+
+  // Проходим по каждому фильму в массиве
+  for (let i = 0; i < movies.length; i++) {
+    const movie = movies[i];
+    if (movie.Poster != "N/A") {
+      // Создаем HTML-элемент для каждого фильма
+      const movieCard = `
+        <div class="simularMovieCard" style="background-image: url('${movie.Poster}');">
+          <div class="saved" onclick="addSaved()" 
+          data-imdbID="${movie.imdbID}" data-title="${movie.Title}" data-poster="${movie.Poster}">
+          </div>
+          <div class="simularMovieTitle">${movie.Title}</div>
+        </div>`;
+      
+      // Добавляем созданный элемент в контейнер
+      simularMovie.innerHTML += movieCard;
+    }
+  }
+}
+
+
+
+
+
+
 
 async function sendRequest(url, method, data) {
   if (method == "POST") {

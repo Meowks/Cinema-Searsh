@@ -140,24 +140,33 @@ nav a{
 }
 .simularMovieCard{
     background-image: url(./img/img/film3.jpg);
-    height: 600px;
+    
+    flex-basis: 350px;
+    flex-grow: 1;
+    max-width: 400px;
+
+    height: calc(16px + (500 - 16) * ((100vw - 390px) / (1280 - 390)));
+
+
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    
+    
     border-radius: 10px;
     display: flex;
     align-items: flex-end;
     position: relative;
 }
-.simularTitleCard{
+.simularMovieTitle{
     text-align: center;
-    font-size: 25px;
+    font-size: calc(16px + (25 - 16) * ((100vw - 390px) / (1280 - 390)));
     font-weight: 700;
     background-color: rgba(220, 220, 220, 0.25);
     width: 100%;
     padding: 20px 0;
     border-radius: 0 0 10px 10px;
-    
+    color: #fff;
 }
 
 .saved{
@@ -208,6 +217,20 @@ nav a{
 }
 
 /* Адаптация */
+
+@media(max-width: 948px){
+    .simularMovie{
+        grid-template-columns: 1fr 1fr;
+        
+    }
+    .simularMovieCard{
+        height: calc(220px + (600 - 220) * ((100vw - 390px) / (948 - 390)));
+    }
+    #movieImg{
+        width: 400px;
+        height: 562px;
+    }
+}
 
 @media(max-width: 390px){
     h1{
