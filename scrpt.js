@@ -12,6 +12,12 @@ const searchBtn = document.getElementById("searchBtn");
 themeBtn.addEventListener("click", changeTheme);
 searchBtn.addEventListener("click", findMovie);
 
+document.addEventListener("keydown", function(event){
+  if (event.key === "Enter"){
+    findMovie()
+  }
+});
+
 // Смена темы
 function changeTheme() {
   const body = document.querySelector("body");
