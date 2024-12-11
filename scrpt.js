@@ -1,48 +1,48 @@
-document.addEventListener("DOMContentLoaded",function(){
+document.addEventListener("DOMContentLoaded", function () {
 
   let main = document.getElementsByClassName("main")[0];
   let movieTitle = document.getElementsByClassName("movieTitle")[0];
   let simularMovieTitle = document.getElementsByClassName("movieTitle")[1];
   let movie = document.getElementsByClassName("movie")[0];
   console.log(movieTitle);
-  
+
   // Кнопки
   const themeBtn = document.getElementById("themeChange");
   const searchBtn = document.getElementById("searchBtn");
-  
+
   // Слушатели событий
-  if(themeBtn){
+  if (themeBtn) {
     themeBtn.addEventListener("click", changeTheme);
   }
-  if(searchBtn){
+  if (searchBtn) {
     searchBtn.addEventListener("click", findMovie);
   }
-  
-  document.addEventListener("keydown", function(event){
-    if (event.key === "Enter"){
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
       findMovie()
     }
   });
-  
+
   // Смена темы
   function changeTheme() {
     const body = document.querySelector("body");
     body.classList.toggle("dark");
   }
-  
+
   // Поиск фильма
   async function findMovie() {
     main.style.display = "none";
     let search = document.getElementsByName("search")[0].value;
-  
+
     let loader = document.getElementsByClassName("loader")[0];
     loader.style.display = "block";
-  
+
     let data = { apikey: "20fe8931", t: search };
-  
+
     let result = await sendRequest("http://www.omdbapi.com/", "GET", data);
     loader.style.display = "none";
-  
+
     if (result.Response == "False") {
       movie.style.display = "none";
       main.style.display = "block";
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded",function(){
       console.log(result);
     }
   }
-  
+
   function showMovie(movie) {
     main.style.display = "block";
     movieTitle.style.display = "block";
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded",function(){
       "movieImg"
     ).style.backgroundImage = `url(${movie.Poster})`;
     movieTitle.innerHTML = `${movie.Title}`;
-  
+
     const movieDesc = document.getElementsByClassName("movieDescription")[0];
     movieDesc.innerHTML = "";
     let params = [
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded",function(){
       "Writer",
       "Actors",
     ];
-  
+
     params.forEach((key) => {
       movieDesc.innerHTML += `
           <div class="desc">
@@ -87,15 +87,15 @@ document.addEventListener("DOMContentLoaded",function(){
           `;
     });
   }
-  
-  
-  
+
+
+
   async function findSimularMovies() {
     let search = document.getElementsByName("search")[0].value;
     let simularMovieTitle = document.getElementsByClassName("movieTitle")[1];
     let data = { apikey: "20fe8931", s: search };
     let result = await sendRequest("https://www.omdbapi.com/", "GET", data);
-  
+
     if (result.Response == "false") {
       // Вы можете скрыть или оставить пустой блок, если ничего не найдено
     } else {
@@ -104,12 +104,12 @@ document.addEventListener("DOMContentLoaded",function(){
       showSimularMovie(result.Search);
     }
   }
-  
+
   function showSimularMovie(movies) {
     const simularMovie = document.getElementsByClassName("simularMovie")[0];
     simularMovie.innerHTML = ""; // Очищаем контейнер перед добавлением новых элементов
     simularMovie.style.display = "grid";
-  
+
     // Проходим по каждому фильму в массиве
     for (let i = 0; i < movies.length; i++) {
       const movie = movies[i];
@@ -122,9 +122,25 @@ document.addEventListener("DOMContentLoaded",function(){
             </div>
             <div class="simularMovieTitle">${movie.Title}</div>
           </div>`;
-        
+
         // Добавляем созданный элемент в контейнер
         simularMovie.innerHTML += movieCard;
+
+
+        // Добовление класса .active
+
+        const favs = JSON.parse(localStorage.getItem("favs")) || [];
+
+        favs.forEach((movie) => {
+          const target = document.querySelector(`[data-imdbID="${movie.imdbID}"]`);
+          if (target) {
+            target.classList.add("active");
+          } else {
+            console.warn("Element not found for imdbID:", movie.imdbID);
+            console.log(movie);
+
+          }
+        });
       }
     }
   }
@@ -144,7 +160,7 @@ document.addEventListener("DOMContentLoaded",function(){
         },
         body: JSON.stringify(data),
       });
-  
+
       response = await response.json();
       return response;
     } else if (method == "GET") {
@@ -158,48 +174,37 @@ document.addEventListener("DOMContentLoaded",function(){
   }
 });
 
-window.addEventListener("DOMContentLoaded",() => {
-  const favs = JSON.parse(localStorage.getItem("favs")) || [];
-  
-  favs.forEach((movie) => {
-    const target = document.querySelector("saved");
-    if(target){
-      target.classList.add("active")
-    } else {
-      console.log("нету");
-      
-    }
-  });
-  
-})
+window.addEventListener("DOMContentLoaded", () => {
+
+});
 
 
-function addSaved(event){
+function addSaved(event) {
   const target = event.currentTarget
 
   const movieData = {
-    title:target.getAttribute("data-title"),
-    poster:target.getAttribute("data-poster"),
-    imdbID:target.getAttribute("data-imdbID"),
+    title: target.getAttribute("data-title"),
+    poster: target.getAttribute("data-poster"),
+    imdbID: target.getAttribute("data-imdbID"),
   }
 
   const favs = JSON.parse(localStorage.getItem("favs")) || [];
 
   const movieIndex = favs.findIndex((movie) => movie.imdbID === movieData.imdbID)
-  if(movieIndex > -1){
+  if (movieIndex > -1) {
     target.classList.remove("active")
-    favs.splice(movieIndex, 1) 
-    
+    favs.splice(movieIndex, 1)
+
     console.log(favs);
-    
+
   } else {
     target.classList.add("active")
     favs.push(movieData);
-    
+
     console.log(favs);
 
   }
-  localStorage.setItem("favs",JSON.stringify(favs))
+  localStorage.setItem("favs", JSON.stringify(favs))
 
   
 };
@@ -209,9 +214,9 @@ function addSaved(event){
 const favorites = JSON.parse(localStorage.getItem("favs"));
 const favCards = document.getElementsByClassName("favoritsCards")[0];
 
-if(favCards){
-
+if (favCards) {
   favorites.forEach((elem) => {
+  
     const card = document.createElement("div");
     const cardTitle = document.createElement("div");
     const saved = document.createElement("div");
@@ -220,19 +225,46 @@ if(favCards){
     cardTitle.innerHTML = elem.title;
     card.classList.add("favoritsCard");
     saved.classList.add("saved")
+    saved.classList.add("active")
     favCards.style.position = "relative"
 
-    saved.addEventListener("click",addSaved)
+    //savedFav.addEventListener("click", addSaved)
 
     card.style.position = "relative"
     card.style.backgroundImage = `url(${elem.poster})`;
     card.appendChild(cardTitle);
     card.appendChild(saved);
     favCards.appendChild(card);
+
+
+    saved.addEventListener("click", removeFavs)
+
     
+    function removeFavs(event){
+      const target = event.currentTarget    
+
+      const exam = saved.classList.contains("active")
+    
+      const movieData = {
+        title: target.getAttribute("data-title"),
+        poster: target.getAttribute("data-poster"),
+        imdbID: target.getAttribute("data-imdbID"),
+      }
+    
+      const favs = JSON.parse(localStorage.getItem("favs")) || [];
+      const movieIndex = favs.findIndex((movie) => movie.imdbID === movieData.imdbID)
+    
+      if(exam){
+        target.classList.remove("active")
+        favs.splice(movieIndex, 1)
+      } else {
+        target.classList.add("active")
+        favs.push(movieData);
+      }
+      localStorage.setItem("favs", JSON.stringify(favs))
+    }
   });
 }
-
 
 
 
