@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let data = { apikey: "20fe8931", t: search };
 
-    let result = await sendRequest("http://www.omdbapi.com/", "GET", data);
+    let result = await sendRequest("https://www.omdbapi.com/", "GET", data);
     loader.style.display = "none";
 
     if (result.Response == "False") {
