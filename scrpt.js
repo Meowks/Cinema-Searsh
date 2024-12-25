@@ -59,10 +59,17 @@ document.addEventListener("DOMContentLoaded", function () {
     main.style.display = "block";
     movieTitle.style.display = "block";
     document.getElementsByClassName("movie")[0].style.display = "flex";
-    document.getElementById(
-      "movieImg"
-    ).style.backgroundImage = `url(${movie.Poster})`;
+    document.getElementById("movieImg").style.backgroundImage = `url(${movie.Poster})`;
+
+    movieImg.setAttribute("data-imdbID", movie.imdbID);
     movieTitle.innerHTML = `${movie.Title}`;
+
+    const movieCard = `
+            <div class="saved" onclick="addSaved(event)" 
+            data-imdbID="${movie.imdbID}" data-title="${movie.Title}" data-poster="${movie.Poster}">
+            </div> 
+          `;
+          movieImg.innerHTML = movieCard
 
     const movieDesc = document.getElementsByClassName("movieDescription")[0];
     movieDesc.innerHTML = "";
@@ -77,6 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
       "Writer",
       "Actors",
     ];
+    console.log(params);
+
 
     params.forEach((key) => {
       movieDesc.innerHTML += `
@@ -86,8 +95,25 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
           `;
     });
-  }
 
+    
+
+      const favs = JSON.parse(localStorage.getItem("favs")) || [];
+  
+      favs.forEach((movie) => {
+        const target = document.querySelector(`[data-imdbID="${movie.imdbID}"]`);
+        const savedStar = document.getElementsByClassName("saved")[0]
+        
+        if (target) {
+          savedStar.classList.add("active");
+        } else {
+          console.warn("Element not found for imdbID:", movie.imdbID);
+          console.log(movie);
+        }
+      });
+    
+    
+  }
 
 
   async function findSimularMovies() {
@@ -110,10 +136,15 @@ document.addEventListener("DOMContentLoaded", function () {
     simularMovie.innerHTML = ""; // Очищаем контейнер перед добавлением новых элементов
     simularMovie.style.display = "grid";
 
+
+    const currentId = document.querySelector("#movieImg").getAttribute("data-imdbID");
+    console.log("Текущий ID:", currentId);
+
+    const filtredMovie = movies.filter((movie) => movie.imdbID !== currentId);
     // Проходим по каждому фильму в массиве
-    for (let i = 0; i < movies.length; i++) {
-      const movie = movies[i];
-      if (movie.Poster != "N/A") {
+    for (let i = 0; i < filtredMovie.length; i++) {
+      const movie = filtredMovie[i];
+      if (movie.Poster != "N/A" ) {
         // Создаем HTML-элемент для каждого фильма
         const movieCard = `
           <div class="simularMovieCard" style="background-image: url('${movie.Poster}');">
@@ -174,9 +205,9 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-window.addEventListener("DOMContentLoaded", () => {
+// window.addEventListener("DOMContentLoaded", () => {
 
-});
+// });
 
 
 function addSaved(event) {
@@ -206,7 +237,7 @@ function addSaved(event) {
   }
   localStorage.setItem("favs", JSON.stringify(favs))
 
-  
+
 };
 
 
@@ -216,7 +247,7 @@ const favCards = document.getElementsByClassName("favoritsCards")[0];
 
 if (favCards) {
   favorites.forEach((elem) => {
-  
+
     const card = document.createElement("div");
     const cardTitle = document.createElement("div");
     const saved = document.createElement("div");
@@ -239,22 +270,22 @@ if (favCards) {
 
     saved.addEventListener("click", removeFavs)
 
-    
-    function removeFavs(event){
-      const target = event.currentTarget    
+
+    function removeFavs(event) {
+      const target = event.currentTarget
 
       const exam = saved.classList.contains("active")
-    
+
       const movieData = {
         title: target.getAttribute("data-title"),
         poster: target.getAttribute("data-poster"),
         imdbID: target.getAttribute("data-imdbID"),
       }
-    
+
       const favs = JSON.parse(localStorage.getItem("favs")) || [];
       const movieIndex = favs.findIndex((movie) => movie.imdbID === movieData.imdbID)
-    
-      if(exam){
+
+      if (exam) {
         target.classList.remove("active")
         favs.splice(movieIndex, 1)
       } else {
